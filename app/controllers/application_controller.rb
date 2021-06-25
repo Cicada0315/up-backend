@@ -2,7 +2,9 @@ class ApplicationController < ActionController::API
     #before_action :authorized
     def encode_token(payload) 
         #issue a token, store payload in token
-        JWT.encode(payload, ENV['secret_key']) 
+        #exprire after an hour
+        payload[:exp] = (1).hours.from_now.to_i
+        JWT.encode(payload, ENV['SECRET_KEY']) 
     end
 
     def auth_header
@@ -13,7 +15,7 @@ class ApplicationController < ActionController::API
         if auth_header()
             token = auth_header.split(' ')[1] #[Bearer, <token>]
             begin
-                JWT.decode(token, ENV['secret_key'], true, algorithm: 'HS256')
+                JWT.decode(token, ENV['SECRET_KEY'], true, algorithm: 'HS256')
                 # JWT.decode => [{ "user_id"=>"2" }, { "alg"=>"HS256" }]
             rescue JWT::DecodeError
                 nil
