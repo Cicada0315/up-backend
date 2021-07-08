@@ -1,11 +1,10 @@
 class UsersController < ApplicationController
-  skip_before_action :authorized, only: [:create]
+  skip_before_action :authorized, only: [:index,:create]
   before_action :set_user, only: [:show, :update, :destroy]
 
   # GET /users
   def index
     @users = User.all
-
     render json: @users
   end
 
@@ -17,7 +16,12 @@ class UsersController < ApplicationController
   # POST /users
   def create
     @user = User.new(user_params)
-    if @user.save
+    if user_params[:password] != user_params[:password_confirmation]
+      render json: {
+        status: 422,
+        errors: "Password and Password confirmation didn't match"
+      }, status: :unprocessable_entity
+    elsif @user.save
       @token = encode_token(user_id: @user.id)
       render json: {
         status: 201,
@@ -54,6 +58,6 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:firstname, :lastname, :email, :password)
+      params.require(:user).permit(:firstname, :lastname, :email, :password, :password_confirmation)
     end
 end
