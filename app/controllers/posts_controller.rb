@@ -1,11 +1,11 @@
+require 'pry'
 class PostsController < ApplicationController
-  skip_before_action :authorized, only: [:index, :destroy]
+  skip_before_action :authorized, only: [:index, :create,:destroy]
   before_action :set_post, only: [:show, :update, :destroy]
 
   # GET /posts
   def index
     @posts = Post.all
-
     render json: @posts
   end
 
@@ -21,16 +21,19 @@ class PostsController < ApplicationController
     if @post.save
       render json: @post, status: :created, location: @post
     else
-      render json: @post.errors, status: :unprocessable_entity
+      render json: {errors: @post.errors.full_messages.join(", ")}, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /posts/1
   def update
-    if @post.update(post_params)
+    #binding.pry
+    if post_params[:likes].uniq.length != post_params[:likes].length
+      render json: {errors: "You already liked this post"}, status: :unprocessable_entity
+    elsif @post.update(post_params)
       render json: @post
     else
-      render json: @post.errors, status: :unprocessable_entity
+      render json: {errors: @post.errors.full_messages.join(", ")}, status: :unprocessable_entity
     end
   end
 
@@ -47,6 +50,6 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.require(:post).permit(:user_id, :title, :content, :files)
+      params.require(:post).permit(:user_id, :title, :content, :files, likes: [])
     end
 end
