@@ -5,7 +5,11 @@ class PostsController < ApplicationController
 
   # GET /posts
   def index
-    @posts = Post.ups
+    if params[:search]
+      @posts=Post.search(params[:search])
+    else
+      @posts = Post.ups
+    end
     render json: @posts
   end
 
