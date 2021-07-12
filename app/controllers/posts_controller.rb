@@ -5,7 +5,7 @@ class PostsController < ApplicationController
 
   # GET /posts
   def index
-    @posts = Post.all
+    @posts = Post.ups
     render json: @posts
   end
 
@@ -50,6 +50,6 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.require(:post).permit(:user_id, :title, :content, :files, likes: [])
+      params.require(:post).permit(:user_id, :title, :content, :files, :view,  likes: [])
     end
 end

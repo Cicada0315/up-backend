@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2021_06_25_171423) do
     t.string "title"
     t.text "content"
     t.string "files"
+    t.integer "view", default: 0
     t.integer "likes", default: [], array: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

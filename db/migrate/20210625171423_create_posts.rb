@@ -5,6 +5,7 @@ class CreatePosts < ActiveRecord::Migration[6.1]
       t.string :title
       t.text :content
       t.string :files
+      t.integer :view, :default => 0
       t.integer :likes, array:true, default: []
 
       t.timestamps
