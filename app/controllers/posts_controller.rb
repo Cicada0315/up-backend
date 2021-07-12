@@ -1,6 +1,6 @@
 require 'pry'
 class PostsController < ApplicationController
-  skip_before_action :authorized, only: [:index, :create,:destroy]
+  skip_before_action :authorized, only: [:index, :update, :destroy]
   before_action :set_post, only: [:show, :update, :destroy]
 
   # GET /posts
